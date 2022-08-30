@@ -105,3 +105,35 @@ db.persons.aggregate([
 ]);
 
 
+// combining match & group & count
+db.persons.aggregate([
+
+    // stage 1
+    {
+        $match: {
+
+            eyeColor: "blue", favoriteFruit: "strawberry"
+
+        }
+    },
+
+
+//stage 2
+    {
+        $group:
+            {
+                _id: {
+                    fruit: "$favoriteFruit",
+                    age: "$age",
+                    eyeColor: "$eyeColor"
+                },
+            }
+
+    },
+    //stage 3
+    {
+        $count: "output"
+    }
+]);
+
+

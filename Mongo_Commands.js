@@ -19,3 +19,89 @@ db.persons.aggregate([
         }
     }
 ]);
+
+
+db.persons.aggregate([
+    {
+        $group: {
+            _id: "$gender"
+        }
+    }
+]);
+
+//output in an object
+db.persons.aggregate([
+    {
+        $group: {
+            _id: "$company.location"
+        }
+    }
+]);
+
+// combining  multiple objects
+db.persons.aggregate([
+    {
+        $group: {
+            _id: {
+                eyeColor: "$eyeColor",
+                fruit: "$favoriteFruit",
+                age: "$age"
+            }
+        }
+    }
+]);
+
+// combining match & group
+db.persons.aggregate([
+
+    // stage 1
+    {
+        $match: {
+
+            eyeColor: "blue", favoriteFruit: "strawberry"
+
+        }
+    },
+
+
+//stage 2
+    {
+        $group:
+        {
+            _id: {
+                fruit: "$favoriteFruit",
+                age: "$age",
+                eyeColor: "$eyeColor"
+            },
+        }
+
+    }
+]);
+
+
+// combining group & match
+db.persons.aggregate([
+
+//stage 1
+    {
+        $group:
+            {
+                _id: {
+                    fruit: "$favoriteFruit",
+                    age: "$age",
+                    eyeColor: "$eyeColor"
+                },
+            }
+
+    },
+    // stage 2
+    {
+        $match: {
+
+            "_id.eyeColor": "blue"
+
+        }
+    },
+]);
+
+

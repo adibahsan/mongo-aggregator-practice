@@ -164,3 +164,31 @@ db.persons.aggregate([
         $limit: 5 // showing 5 objects
     }
 ]);
+
+
+// unwind
+db.persons.aggregate([
+
+    // stage 1
+    {
+        $limit: 2
+    },
+    {
+        $unwind:
+            {
+                path: "$tags"
+            }// showing 5 objects
+    },
+    {
+        $group:
+            {
+            _id: "$tags"
+        }
+    },
+    {
+        $count : "count"
+    }
+]);
+
+
+

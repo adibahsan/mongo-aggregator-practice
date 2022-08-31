@@ -192,3 +192,27 @@ db.persons.aggregate([
 
 
 
+// accumulator
+db.persons.aggregate([
+
+    // stage 1
+    {
+        $limit: 2
+    },
+    {
+        $unwind:
+            {
+                path: "$tags"
+            }// showing 5 objects
+    },
+    {
+        $group:
+            {
+                _id: "$tags",
+                total : {$sum : 1}
+            }
+    }
+]);
+
+
+

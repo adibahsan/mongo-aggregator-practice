@@ -216,3 +216,35 @@ db.persons.aggregate([
 
 
 
+// multiple combination + projection
+
+db.inventory.aggregate(
+    [{
+        $project: {
+            inventoryLocation: 1,
+            quantity: "$qty",
+            productKey: {
+                $split: ["$key", ":"]
+            }
+        }
+    }, {
+        $group: {
+            _id: {
+                inventoryLocation: "$inventoryLocation",
+                baseId: {
+                    $first: "$productKey"
+                }
+            },
+            quantity: {
+                $sum: "$quantity"
+            }
+        }
+    }, {
+        $project: {
+            _id: 0,
+            quantity: 1,
+            inventoryLocation: "$_id.inventoryLocation",
+            baseId: "$_id.baseId"
+        }
+    }, {$out: 'managedProductCounter'}]
+);

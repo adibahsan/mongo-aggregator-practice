@@ -136,4 +136,31 @@ db.persons.aggregate([
     }
 ]);
 
+// $project & $limit
 
+db.persons.aggregate([
+
+    // stage 1
+    {
+        $project:
+            {
+                name: 1,
+                company: {
+                    companyTitle: "$company.title",
+                    companyLocation: "$company.location",
+                    companyEmail: "$company.email"
+                }
+            }
+    },
+
+    {
+        $sort:
+            {
+                "company.companyTitle": 1,
+                "name": -1
+            }
+    },
+    {
+        $limit: 5 // showing 5 objects
+    }
+]);
